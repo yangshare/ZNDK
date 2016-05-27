@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>智能灯控</title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">信息反馈</h1>
+		</header>
+		<div class="mui-page-content" style="margin-top: 70px">
+			<p>问题和建议</p>
+			<div class="row mui-input-row">
+				<textarea id='question' class="mui-input-clear question" placeholder="请详细描述你的问题和建议..."></textarea>
+			</div>
+
+			<p>QQ/邮箱</p>
+			<div class="mui-input-row">
+				<input id='contact' type="text" class="mui-input-clear  contact" placeholder="(选填,方便我们联系你 )" />
+			</div>
+			<button id='submitBtn' type="button" class="mui-btn-block mui-btn-blue">提交</button>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script src="js/app.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			//点击提交
+			var submitBtn = document.getElementById("submitBtn");
+			var questionBox = document.getElementById("question");
+			var contactBox = document.getElementById("contact");
+			submitBtn.addEventListener("tap", function() {
+				//				alert("questionBox=" + questionBox.value.length+ ",contactBox=" + contactBox.value);
+				//非空判断
+				if (questionBox.value.length > 0) {
+					mui.ajax('http://server-name/login.php', {
+						data: {
+							question: questionBox.value,
+							contact: contactBox.value
+						},
+						dataType: 'json', //服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						success: function(data) {
+							//服务器返回响应，根据响应结果，分析是否登录成功；
+							plus.nativeUI.toast('提交成功');
+							//登录成功跳转到主页
+							mui.openWindow({
+								url: 'index.html',
+								id: 'index',
+								show: {
+									aniShow: 'pop-in'
+								}
+							});
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log(type);
+							window.location.href="index.html";
+//							mui.openWindow({
+//								url: 'index.html',
+//								id: 'index',
+//								show: {
+//									aniShow: 'pop-in'
+//								}
+//							});
+						}
+					});
+				} else {
+					plus.nativeUI.toast("请先填写问题和建议！");
+					questionBox.focus();
+				}
+			});
+		</script>
+	</body>
+
+</html>

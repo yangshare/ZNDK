@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>智能灯控</title>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+		<link href="css/style.css" rel="stylesheet" />
+
+		<style type="text/css">
+			.my-index-top {
+				margin: auto;
+				height: 350px;
+				background-image: url(images/img/w0.png);
+				background-position: top;
+				background-repeat: no-repeat;
+				background-size: contain;
+			}
+			
+			.my-index-top .mui-col-xs-6 {
+				/*border: 1px red solid;*/
+				text-align: center;
+				padding-top: 20px;
+			}
+			
+			.my-table {
+				margin: 0px 90px;
+			}
+			
+			.my-index-bottom .mui-col-xs-4 {
+				text-align: center;
+			}
+			.row{
+				text-align: center;
+			}
+		</style>
+	</head>
+
+	<body>
+
+		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">智能灯控</h1>
+		</header>
+		<div class="mui-content" style="background-color: white;">
+			<div class="my-index-top">
+
+				<div class="my-table">
+					<div class="mui-row">
+						<div class="mui-col-xs-6 " style="height: 70px;"></div>
+						<div class="mui-col-xs-6 "></div>
+					</div>
+					<div class="mui-row">
+						<div class="mui-col-xs-6 "><img src="images/img/humidity.png" /></div>
+						<div class="mui-col-xs-6 "><img src="images/img/temperature.png" /></div>
+					</div>
+					<div class="mui-row">
+						<div class="mui-col-xs-6 ">22%</div>
+						<div class="mui-col-xs-6 ">25°C</div>
+
+					</div>
+					<div class="mui-row">
+						<div class="mui-col-xs-6 ">湿度正常</div>
+						<div class="mui-col-xs-6 ">温度正常</div>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="my-index-bottom" >
+				
+				<div class="container-fluid">
+					
+					<div class="row">
+						<div class="col-xs-4 col-md-4"><a href="#" id="my-btn-auto"><img src="images/img/c2.png" class="img-responsive" style="display: inline;"/></a></div>
+						<div class="col-xs-4 col-md-4"><a href="#"><img src="images/img/c3.png" class="img-responsive" style="display: inline;"/></a></div>
+						<div class="col-xs-4 col-md-4"><a href="feedback.html"><img src="images/img/c1.png" class="img-responsive" style="display: inline;"/></a></div>
+					</div>
+				</div>
+
+				<div class="mui-row" style="margin-top: 15px;">
+					<div class="mui-col-xs-4 ">自动模式</div>
+					<div class="mui-col-xs-4">手动模式</div>
+					<div class="mui-col-xs-4 ">用户反馈</div>
+				</div>
+			</div>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script src="js/app.js"></script>
+
+		<script>
+			(function($, doc) {
+				$.init();
+				$.plusReady(function() {
+					//自动模式，弹出提示
+					var btn_auto=document.getElementById("my-btn-auto");
+					//监听点击事件
+					btn_auto.addEventListener("tap",function () {
+						mui.ajax('http://server-name/login.php', {
+									data: {
+										MacName:null
+									},
+									dataType: 'json', //服务器返回json格式数据
+									type: 'post', //HTTP请求类型
+									timeout: 10000, //超时时间设置为10秒；
+									beforeSend: function(){
+										alert("发送前");
+									},
+									success: function(data) {
+										//服务器返回响应，根据响应结果，分析是否登录成功；
+										if (data.json == 1) {
+											//将MAC地址存本地
+											plus.storage.setItem("myMac",data.json.MacName);
+											plus.nativeUI.toast('自动模式开启成功！');
+											//登录成功跳转到主页
+											$.openWindow({
+												url: 'index.html',
+												id: 'index',
+												show: {
+													aniShow: 'pop-in'
+												}
+											});
+										}
+									},
+									error: function(xhr, type, errorThrown) {
+										//异常处理；type：错误描述，可取值："timeout", "error", "abort", "parsererror"、"null"
+										plus.nativeUI.toast('自动模式开启失败！');
+										console.log(type);
+									}
+								});
+					 
+					});
+					//返回键，退出应用
+					var backButtonPress = 0;
+					$.back = function(event) {
+						backButtonPress++;
+						if (backButtonPress > 1) {
+							plus.runtime.quit();
+						} else {
+							plus.nativeUI.toast('再按一次退出应用');
+						}
+						setTimeout(function() {
+							backButtonPress = 0;
+						}, 1000);
+						return false;
+					};
+				});
+			}(mui, document));
+		</script>
+	</body>
+
+</html>

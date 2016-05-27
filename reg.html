@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html class="ui-page-login">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link href="css/style.css" rel="stylesheet" />
+		<style>
+			.area {
+				margin: 20px auto 0px auto;
+			}
+			
+			.mui-input-group:first-child {
+				margin-top: 20px;
+			}
+			
+			.mui-input-group label {
+				/*width: 22%;*/
+			}
+			
+			.mui-input-row label~input,
+			.mui-input-row label~select,
+			.mui-input-row label~textarea {
+				/*width: 78%;*/
+			}
+			
+			.mui-checkbox input[type=checkbox],
+			.mui-radio input[type=radio] {
+				top: 6px;
+			}
+			
+			.mui-content-padded {
+				margin-top: 25px;
+			}
+			
+			.mui-btn {
+				padding: 10px;
+			}
+			
+			#bcid {
+				position: fixed;
+				top: 50px;
+				background: #0F0;
+				height: 480px;
+				width: 100%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">注册</h1>
+		</header>
+		<div class="mui-content">
+			<form class="mui-input-group mui-card">
+				<div class="mui-input-row">
+					<label>账号</label>
+					<input id='account' type="text" class="mui-input-clear mui-input" placeholder="请输入手机号">
+				</div>
+				<div class="mui-input-row">
+					<label>密码</label>
+					<input id='password' type="password" class="mui-input-clear mui-input" placeholder="请输入密码">
+				</div>
+				<div class="mui-input-row">
+					<label>确认</label>
+					<input id='password_confirm' type="password" class="mui-input-clear mui-input" placeholder="请确认密码">
+				</div>
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell mui-collapse">
+						<a class="mui-navigate-right" href="#">密保问题</a>
+						<div class="mui-collapse-content">
+
+							<div class="mui-input-row mui-radio mui-left">
+								<label style="width: 100%;">我的姓名？</label>
+								<input name="radioq" type="radio" checked="" value="q1">
+							</div>
+							<div class="mui-input-row mui-radio mui-left">
+								<label style="width: 100%;">我母亲的姓名？</label>
+								<input name="radioq" type="radio" value="q2">
+							</div>
+							<div class="mui-input-row mui-radio mui-left">
+								<label style="width: 100%;">我父亲的姓名？</label>
+								<input name="radioq" type="radio" value="q3">
+							</div>
+
+							<div class="mui-input-row">
+								<label>答案</label>
+								<input id="answer" type="text" class="mui-input-clear" placeholder="输入对应问题答案" maxlength="10">
+							</div>
+
+						</div>
+					</li>
+					<li class="mui-table-view-cell mui-collapse">
+						<a class="mui-navigate-right" href="#">硬件绑定</a>
+						<div class="mui-collapse-content">
+
+							<button type="button" class="mui-btn mui-btn-blue mui-btn-block" onclick="clicked('plus/barcode_scan.html',true,true);">扫码</button>
+							<div class="mui-content-padded">
+								<p>请扫码硬件设备上的二维码</p>
+							</div>
+							<button type="button" class="mui-btn mui-btn-blue mui-btn-block" onclick='startScanImg()'>扫图</button>
+							<div class="mui-content-padded">
+								<p>请选择手机相册中硬件设备的二维码</p>
+							</div>
+							<div class="mui-input-row">
+								<label>MAC</label>
+								<input id='myMAC' type="text" class="mui-input-clear" placeholder="显示MAC地址" disabled="disabled">
+							</div>
+						</div>
+					</li>
+
+				</ul>
+			</form>
+
+			<div class="mui-content-padded">
+				<button id='reg' class="mui-btn mui-btn-block mui-btn-primary">注册</button>
+			</div>
+			<div class="mui-content-padded">
+				<p>注册成功后的用户可用于登录</p>
+			</div>
+		</div>
+
+		<script src="js/mui.min.js"></script>
+		<script src="js/app.js"></script>
+		<script type="text/javascript" src="js/common.js"></script>
+		<script>
+			(function($, doc) {
+				$.init();
+				$.plusReady(function() {
+					var isFirst = true;
+//					console.log(plus.storage.getItem("isFirst"));
+					if (plus.storage.getItem("isFirst") == false) {
+						$.openWindow({
+							url: 'login.html',
+							id: 'login',
+							show: {
+								aniShow: 'pop-in'
+							}
+						});
+					} else {
+						var regButton = doc.getElementById('reg');
+						var accountBox = doc.getElementById('account');
+						var passwordBox = doc.getElementById('password');
+						var passwordConfirmBox = doc.getElementById('password_confirm');
+						var answerBox = doc.getElementById('answer');
+						var myMACBox = doc.getElementById('myMAC');
+						var radiosq = document.getElementsByName("radioq");
+						regButton.addEventListener('tap', function(event) {
+							var regInfo = {
+								account: accountBox.value,
+								password: passwordBox.value,
+								question: getRadios(radiosq),
+								answer: answerBox.value,
+								myMAC: myMACBox.value
+							};
+							var passwordConfirm = passwordConfirmBox.value;
+							if (passwordConfirm != regInfo.password) {
+								plus.nativeUI.toast('密码两次输入不一致');
+								return;
+							}
+							//校验注册信息
+							app.reg(regInfo, function(err) {
+								if (err) {
+									plus.nativeUI.toast(err);
+									return;
+								} else {
+									mui.ajax('http://server-name/login.php', {
+										data: {
+											regInfo: regInfo
+										},
+										dataType: 'json', //服务器返回json格式数据
+										type: 'post', //HTTP请求类型
+										timeout: 10000, //超时时间设置为10秒；
+										success: function(data) {
+											//服务器返回响应，根据响应结果，分析是否登录成功；
+											if (data.json == 1) {
+												plus.storage.setItem("isFirst", false);
+												plus.nativeUI.toast('注册成功');
+												//注册成功跳转到登录页
+												$.openWindow({
+													url: 'login.html',
+													id: 'login',
+													show: {
+														aniShow: 'pop-in'
+													}
+												});
+											}
+										},
+										error: function(xhr, type, errorThrown) {
+											//异常处理；
+											console.log(type);
+										}
+									});
+								}
+							});
+						});
+					}
+				});
+			}(mui, document));
+			//获取radio组选择数据
+			function getRadios(radiosq) {
+				for (var i = 0; i < radiosq.length; i++) {
+					if (radiosq[i].checked) {
+						//						console.log("当前选中的为：" + radiosq[i].value);
+						return radiosq[i].value;
+					}
+				}
+			}
+			//扫图
+			function startScanImg() {
+				plus.gallery.pick(function(path) {
+					plus.barcode.scan(path, onmarked, function(error) {
+						plus.nativeUI.alert("无法识别此图片");
+					});
+				}, function(err) {
+					plus.nativeUI.alert("Failed: " + err.message);
+				});
+			}
+			//扫码成功
+			function scaned(t, r, f) {
+				onmarked(t, r, f);
+			}
+			// 二维码扫描成功
+			function onmarked(type, result, file) {
+				switch (type) {
+					case plus.barcode.QR:
+						type = "QR";
+						break;
+					case plus.barcode.EAN13:
+						type = "EAN13";
+						break;
+					case plus.barcode.EAN8:
+						type = "EAN8";
+						break;
+					default:
+						type = "其它" + type;
+						break;
+				}
+				result = result.replace(/\n/g, '');
+				//plus.nativeUI.alert("scaned('" + type + "','" + result + "','" + file + "');");
+				console.log("扫码结果：" + result);
+				var myMAC = document.getElementById('myMAC');
+				myMAC.value = result;
+				plus.nativeUI.alert('扫码成功');
+			}
+		</script>
+
+	</body>
+
+</html>

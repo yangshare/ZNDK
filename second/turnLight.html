@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>智能灯控</title>
+		<link rel="stylesheet" type="text/css" href="../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../css/iconfont.css" />
+		<style type="text/css">
+			.active {
+				padding: 5px;
+				border: 1px #ccc solid;
+				box-shadow: inset 0 0 5px 5px #ccc;
+			}
+			
+			.mui-slider .mui-slider-group .mui-slider-item img {
+				width: 50%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">调光模式</h1>
+		</header>
+		<div class="mui-content">
+			<div class="mui-content-padded">
+				<p>
+					*点击3种颜色按钮调色、拖块滑动条调节亮度，再点击确认生效
+				</p>
+			</div>
+			<div style="padding: 20px;">
+				<img id="my-image-light" src="../images/img/light_gray.png" width="100%" height="100%" />
+			</div>
+			<div id="Gallery" class="mui-slider" style="margin-top:15px;" data-slider="1">
+				<div class="mui-slider-group" style="transform: translate3d(0px, 0px, 0px) translateZ(0px); transition-duration: 0ms;">
+					<div class="mui-slider-item">
+						<ul class="mui-table-view mui-grid-view mui-grid-9">
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+								<a href="#">
+
+									<img src="../images/img/button_blue.png" />
+
+									<div class="mui-media-body">blue</div>
+								</a>
+							</li>
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4" style="margin-top: 30px;">
+								<a href="#">
+									<img src="../images/img/button_green.png" />
+									<div class="mui-media-body">green</div>
+								</a>
+							</li>
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+								<a href="#">
+									<img src="../images/img/button_red.png" />
+									<div class="mui-media-body">red</div>
+								</a>
+							</li>
+
+						</ul>
+					</div>
+
+				</div>
+
+			</div>
+			<br />
+			<div class="" style="margin-left: 10px;">
+				<h5 style="clear: left;">设置亮度：<span id="block-range-val">16</span></h5>
+				<div class="mui-input-row mui-input-range" style="margin-bottom: 30px;">
+					<input type="range" id="block-range" value="16" min="1" max="32" data-input-slider="4">
+				</div>
+			</div>
+			<div style="padding:5px;">
+				<button id="my-btn-OK" type="button" class="mui-btn mui-btn-blue mui-btn-block">确认生效</button>
+			</div>
+
+		</div>
+		<script src="../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script>
+			(function($, doc) {
+				$.init();
+				$.plusReady(function() {
+					//大灯
+					var myLight = document.getElementById("my-image-light");
+					//灯的颜色
+					var lightColor = 1 //蓝1，绿2，红3
+						//灯的亮度
+					var lightNum = 16;
+					//确认生效
+					var btn_OK = document.getElementById("my-btn-OK");
+					//监听点击事件
+					btn_OK.addEventListener("tap", function() {
+						console.log("颜色=" + lightColor + ",亮度=" + lightNum);
+						mui.ajax('http://server-name/login.php', {
+							data: {
+								Colors: lightColor,
+								Light: lightNum
+							},
+							dataType: 'json', //服务器返回json格式数据
+							type: 'post', //HTTP请求类型
+							timeout: 10000, //超时时间设置为10秒；
+							success: function(data) {
+								//服务器返回响应，根据响应结果，分析是否登录成功；
+								if (data.json == 1) {
+									//将MAC地址存本地
+									plus.storage.setItem("myMac", data.json.MacName);
+									plus.nativeUI.toast('登录成功');
+									//登录成功跳转到主页
+									$.openWindow({
+										url: 'index.html',
+										id: 'index',
+										show: {
+											aniShow: 'pop-in'
+										}
+									});
+								}
+							},
+							error: function(xhr, type, errorThrown) {
+								//异常处理；
+								console.log(type);
+							}
+						});
+					});
+					//监听input事件，获取range的value值，也可以直接element.value获取该range的值
+					var rangeList = document.querySelectorAll('input[type="range"]');
+					for (var i = 0, len = rangeList.length; i < len; i++) {
+						rangeList[i].addEventListener('input', function() {
+							//赋值给亮度变量lightNum
+							lightNum = this.value;
+							if (this.id.indexOf('field') >= 0) {
+								document.getElementById(this.id + '-input').value = this.value;
+							} else {
+								document.getElementById(this.id + '-val').innerHTML = this.value;
+							}
+						});
+					}
+					//监听点击事件
+					mui("#Gallery").on("tap", "a", function() {
+						var li = this.parentNode;
+						var ul = li.parentNode;
+						var lis = ul.children;
+						var scene = 1;
+						for (var i = 0; i < lis.length; i++) {
+							lis[i].children[0].className = "";
+						}
+						this.className = "active";
+						for (var i = 0; i < lis.length; i++) {
+							if (lis[i].children[0].className == "active") {
+								scene = i + 1;
+								lightColor=scene;
+							}
+						}
+						myLight.src = "../images/img/light_" + this.children[1].innerHTML + ".png";
+						//						plus.nativeUI.toast(this.children[1].innerHTML + '开启成功！');
+					});
+				});
+			}(mui, document));
+		</script>
+
+	</body>
+
+</html>
