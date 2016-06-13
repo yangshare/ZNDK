@@ -30,8 +30,9 @@
 					*点击3种颜色按钮调色、拖块滑动条调节亮度，再点击确认生效
 				</p>
 			</div>
-			<div style="padding: 20px;">
-				<img id="my-image-light" src="../images/img/light_gray.png" width="100%" height="100%" />
+			<div style="padding: 20px;text-align: center;">
+				<img id="my-image-light" src="../images/img/light_gray.png" width="50%"  />
+				<button id="closeLight" type="button" class="mui-btn mui-btn-mini">关灯</button>
 			</div>
 			<div id="Gallery" class="mui-slider" style="margin-top:15px;" data-slider="1">
 				<div class="mui-slider-group" style="transform: translate3d(0px, 0px, 0px) translateZ(0px); transition-duration: 0ms;">
@@ -39,24 +40,25 @@
 						<ul class="mui-table-view mui-grid-view mui-grid-9">
 							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
 								<a href="#">
+									<img src="../images/img/button_red.png" />
+									<div class="mui-media-body">red</div>
+								</a>
+							</li>
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4" style="margin-top: 30px;">
+								<a href="#">
 
 									<img src="../images/img/button_blue.png" />
 
 									<div class="mui-media-body">blue</div>
 								</a>
 							</li>
-							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4" style="margin-top: 30px;">
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4" >
 								<a href="#">
 									<img src="../images/img/button_green.png" />
 									<div class="mui-media-body">green</div>
 								</a>
 							</li>
-							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
-								<a href="#">
-									<img src="../images/img/button_red.png" />
-									<div class="mui-media-body">red</div>
-								</a>
-							</li>
+							
 
 						</ul>
 					</div>
@@ -84,16 +86,46 @@
 					//大灯
 					var myLight = document.getElementById("my-image-light");
 					//灯的颜色
-					var lightColor = 1 //蓝1，绿2，红3
+					var lightColor = 1 //红1，蓝2，绿3,关4
 						//灯的亮度
 					var lightNum = 16;
 					//确认生效
-					var btn_OK = document.getElementById("my-btn-OK");
+					var btn_OK = doc.getElementById("my-btn-OK");
+					var closeLight=doc.getElementById("closeLight");
 					//监听点击事件
+					closeLight.addEventListener("tap", function() {
+						myLight.src = "../images/img/light_gray.png";
+						mui.ajax('http://115.28.82.149:8080/ZNDK/Command_hand', {
+							data: {
+								MacName:plus.storage.getItem("myMac"),
+								Colors: 4,
+								Light: 1
+							},
+							dataType: 'json', //服务器返回json格式数据
+							type: 'post', //HTTP请求类型
+							timeout: 10000, //超时时间设置为10秒；
+							success: function(data) {
+								console.log(data.json);
+								//服务器返回响应，根据响应结果，分析是否登录成功；
+								if (data.json == 1) {
+									plus.nativeUI.toast('设置成功');
+								}else{
+									plus.nativeUI.toast('硬件离线');
+									
+								}
+							},
+							error: function(xhr, type, errorThrown) {
+								//异常处理；
+								plus.nativeUI.toast('设置失败');
+								console.log(type);
+							}
+						});
+					});
 					btn_OK.addEventListener("tap", function() {
 						console.log("颜色=" + lightColor + ",亮度=" + lightNum);
-						mui.ajax('http://server-name/login.php', {
+						mui.ajax('http://115.28.82.149:8080/ZNDK/Command_hand', {
 							data: {
+								MacName:plus.storage.getItem("myMac"),
 								Colors: lightColor,
 								Light: lightNum
 							},
@@ -101,23 +133,17 @@
 							type: 'post', //HTTP请求类型
 							timeout: 10000, //超时时间设置为10秒；
 							success: function(data) {
-								//服务器返回响应，根据响应结果，分析是否登录成功；
 								if (data.json == 1) {
-									//将MAC地址存本地
-									plus.storage.setItem("myMac", data.json.MacName);
-									plus.nativeUI.toast('登录成功');
-									//登录成功跳转到主页
-									$.openWindow({
-										url: 'index.html',
-										id: 'index',
-										show: {
-											aniShow: 'pop-in'
-										}
-									});
+									plus.nativeUI.toast('设置成功');
+									
+								}else{
+									plus.nativeUI.toast('硬件离线');
+									
 								}
 							},
 							error: function(xhr, type, errorThrown) {
 								//异常处理；
+								plus.nativeUI.toast('设置失败');
 								console.log(type);
 							}
 						});

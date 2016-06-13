@@ -85,55 +85,51 @@
 			(function($, doc) {
 				$.init();
 				$.plusReady(function() {
-					
+
 					//监听点击事件
 					mui("#Gallery").on("tap", "a", function() {
 						var li = this.parentNode;
 						var ul = li.parentNode;
 						var lis = ul.children;
-						var scene=1;//场景编号
+						var scene = 1; //场景编号
 						for (var i = 0; i < lis.length; i++) {
-							lis[i].children[0].style.color="" ;
-							lis[i].children[0].className="" ;
-						}	
-						this.style.color="#ff4400";
-						this.className="active";
+							lis[i].children[0].style.color = "";
+							lis[i].children[0].className = "";
+						}
+						this.style.color = "#ff4400";
+						this.className = "active";
 						for (var i = 0; i < lis.length; i++) {
-							if(lis[i].children[0].className =="active"){
-								scene=i+1;
-								console.log("场景："+scene);
+							if (lis[i].children[0].className == "active") {
+								scene = i + 1;
+								console.log("场景：" + scene);
 							}
 						}
-						
-						mui.ajax('http://server-name/login.php', {
-									data: {
-										Scene:scene
-									},
-									dataType: 'json', //服务器返回json格式数据
-									type: 'post', //HTTP请求类型
-									timeout: 10000, //超时时间设置为10秒；
-									success: function(data) {
-										//服务器返回响应，根据响应结果，分析是否登录成功；
-										if (data.json == 1) {
-											//将MAC地址存本地
-											plus.storage.setItem("myMac",data.json.MacName);
-											plus.nativeUI.toast('登录成功');
-											//登录成功跳转到主页
-											$.openWindow({
-												url: 'index.html',
-												id: 'index',
-												show: {
-													aniShow: 'pop-in'
-												}
-											});
-										}
-									},
-									error: function(xhr, type, errorThrown) {
-										//异常处理；
-										console.log(type);
-									}
-								});
-						plus.nativeUI.toast(this.children[1].innerHTML + '开启成功！');
+
+						mui.ajax('http://115.28.82.149:8080/ZNDK/Command_hand', {
+							data: {
+								MacName:plus.storage.getItem("myMac"),
+								Scene: scene
+							},
+							dataType: 'json', //服务器返回json格式数据
+							type: 'post', //HTTP请求类型
+							timeout: 10000, //超时时间设置为10秒；
+							success: function(data) {
+								//服务器返回响应，根据响应结果，分析是否登录成功；
+								if (data.json == 1) {
+//									plus.nativeUI.toast('设置成功');
+
+								} else {
+									plus.nativeUI.toast('硬件离线');
+
+								}
+							},
+							error: function(xhr, type, errorThrown) {
+								//异常处理；
+								plus.nativeUI.toast('设置失败');
+								console.log(type);
+							}
+						});
+//						plus.nativeUI.toast(this.children[1].innerHTML + '开启成功！');
 					});
 				});
 			}(mui, document));

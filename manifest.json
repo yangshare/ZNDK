@@ -14,7 +14,7 @@
 	"icons": {
 		"72": "icon.png"
 	},
-	"launch_path": "feedback.html",/*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
+	"launch_path": "login.html",/*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
 	"developer": {
 		"name": "",/*开发者名称*/
 		"email": "",/*开发者邮箱地址*/
@@ -155,11 +155,11 @@
 					}
 				},
 				"android": {
-					"mdpi": "", /*普通屏启动图片，分辨率：240x282*/
-					"ldpi": "", /*大屏启动图片，分辨率：320x442*/
-					"hdpi": "", /*高分屏启动图片，分辨率：480x762*/
-					"xhdpi": "", /*720P高分屏启动图片，分辨率：720x1242*/
-					"xxhdpi": ""
+					"mdpi": "E:/images/index.png", /*普通屏启动图片，分辨率：240x282*/
+					"ldpi": "E:/images/index.png", /*大屏启动图片，分辨率：320x442*/
+					"hdpi": "E:/images/index.png", /*高分屏启动图片，分辨率：480x762*/
+					"xhdpi": "E:/images/index.png", /*720P高分屏启动图片，分辨率：720x1242*/
+					"xxhdpi": "E:/images/index.png"
 				}
 			}
 		}
@@ -287,7 +287,9 @@
 					"css/bootstrap.min.css",
 					"css/common.css",
 					"js/immersed.js",
-					"feedback.html"
+					"feedback.html",
+					"menu.html",
+					"fonts/mui.ttf"
 				],
 				"refer": [],
 				"priority": 0
@@ -391,11 +393,12 @@
 					"fonts/iconfont2.ttf",
 					"fonts/iconfont2.ttf",
 					"scenario.html",
-					"second/time.html"
+					"second/time.html",
+					"second/turnLight.html",
+					"index.html"
 				],
 				"refer": [
 					"login.html",
-					"second/turnLight.html",
 					"second/scenario.html"
 				],
 				"priority": 0
@@ -427,7 +430,10 @@
 			"second/scenario.html": {
 				"resources": [
 					"css/iconfont.css",
-					"fonts/iconfont.ttf"
+					"fonts/iconfont.ttf",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css"
 				],
 				"refer": [],
 				"priority": 0

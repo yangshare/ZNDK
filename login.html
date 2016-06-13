@@ -96,7 +96,7 @@
 			<form id='login-form' class="mui-input-group">
 				<div class="mui-input-row">
 					<label>账号</label>
-					<input id='account' type="text" class="mui-input-clear mui-input" placeholder="请输入手机号码">
+					<input id='account' type="tel" class="mui-input-clear mui-input" placeholder="请输入手机号码" maxlength="11">
 				</div>
 				<div class="mui-input-row">
 					<label>密码</label>
@@ -160,20 +160,22 @@
 						app.login(loginInfo, function(err) {
 							if (err) {
 								plus.nativeUI.toast(err);
+								alert(err);
 								return;
 							}else{
-								mui.ajax('http://server-name/login.php', {
+								mui.ajax('http://115.28.82.149:8080/ZNDK/User_login', {
 									data: {
-										loginInfo:loginInfo
+										PhoneNum:accountBox.value,
+										PassWord:passwordBox.value
+
 									},
 									dataType: 'json', //服务器返回json格式数据
 									type: 'post', //HTTP请求类型
 									timeout: 10000, //超时时间设置为10秒；
 									success: function(data) {
 										//服务器返回响应，根据响应结果，分析是否登录成功；
-										if (data.json == 1) {
 											//将MAC地址存本地
-											plus.storage.setItem("myMac",data.json.MacName);
+											plus.storage.setItem("myMac",data.json);
 											plus.nativeUI.toast('登录成功');
 											//登录成功跳转到主页
 											$.openWindow({
@@ -183,7 +185,6 @@
 													aniShow: 'pop-in'
 												}
 											});
-										}
 									},
 									error: function(xhr, type, errorThrown) {
 										//异常处理；

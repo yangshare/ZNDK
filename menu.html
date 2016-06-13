@@ -13,11 +13,8 @@
 
 		<!--底部选项卡-->
 		<nav class="mui-bar mui-bar-tab">
-			<a class="mui-tab-item mui-active" href="second/time.html">
-				<span class="mui-icon iconfont icon-shijian"></span>
-				<span class="mui-tab-label">定时</span>
-			</a>
-			<a class="mui-tab-item" href="second/turnLight.html">
+
+			<a class="mui-tab-item mui-active" href="second/turnLight.html">
 				<span class="mui-icon iconfont icon-deng"></span>
 				<span class="mui-tab-label">调光</span>
 			</a>
@@ -25,7 +22,10 @@
 				<span class="mui-icon iconfont icon-icon4"></span>
 				<span class="mui-tab-label">场景</span>
 			</a>
-
+			<a class="mui-tab-item " href="second/time.html">
+				<span class="mui-icon iconfont icon-shijian"></span>
+				<span class="mui-tab-label">定时</span>
+			</a>
 		</nav>
 		<!--即使是底部工具条和底部选项卡，也要放在.mui-content之前，否则固定栏会遮住部分主内容-->
 
@@ -35,7 +35,7 @@
 			//设置默认打开首页显示的子页序号；
 			var Index = 0;
 			//把子页的路径写在数组里面
-			var subpages = ['second/time.html', 'second/turnLight.html', 'second/scenario.html'];
+			var subpages = ['second/turnLight.html', 'second/scenario.html', 'second/time.html'];
 			//所有的plus-*方法写在mui.plusReady中或者后面。
 			mui.plusReady(function() {
 				//获取当前页面所属的Webview窗口对象
@@ -80,34 +80,38 @@
 			//自定义返回函数，返回时隐藏当前选项卡，显示上一次活跃的选项卡页面；
 			var first = null;
 			mui.back = function() {
-				if (lastActiveTabs.length > 0) {
-					var last = lastActiveTabs.pop();
-					//先隐藏当前的
-					plus.webview.hide(activeTab);
-					//取消当前选项卡的高亮样式
-					document.querySelector(".mui-bar-tab .mui-active").classList.remove("mui-active");
-					//再显示历史页面
-					plus.webview.show(last);
-					//历史选项卡增加高亮样式
-					document.querySelector(".mui-bar-tab a[href= '" + last + "']").classList.add("mui-active");
-					//更改当前活跃的选项卡
-					activeTab = last;
-				} else {
-					//不能再退了
-					
+//				if (lastActiveTabs.length > 0) {
+//					var last = lastActiveTabs.pop();
+//					//先隐藏当前的
+//					plus.webview.hide(activeTab);
+//					//取消当前选项卡的高亮样式
+//					document.querySelector(".mui-bar-tab .mui-active").classList.remove("mui-active");
+//					//再显示历史页面
+//					plus.webview.show(last);
+//					//历史选项卡增加高亮样式
+//					document.querySelector(".mui-bar-tab a[href='" + last + "']").classList.add("mui-active");
+//					//更改当前活跃的选项卡
+//					activeTab = last;
+//				} else {
+//					var w = plus.webview.create( "index.html" );
+					plus.webview.open("index.html"); // 显示窗口
+					//打开新页面关闭当前页面清理栈
+					var ws=plus.webview.currentWebview();
+					plus.webview.close(ws);
 					//首次按键，提示‘再按一次退出应用’
-					if (!first) {
-						first = new Date().getTime();
-						mui.toast('再按一次退出应用');
-						setTimeout(function() {
-							first = null;
-						}, 1000);
-					} else {
-						if (new Date().getTime() - first < 1000) {
-							plus.runtime.quit();
-						}
-					}
-				}
+//					if (!first) {
+//						first = new Date().getTime();
+//						mui.toast('再按一次退出应用');
+//						setTimeout(function() {
+//							first = null;
+//						}, 1000);
+//					} else {
+//						if (new Date().getTime() - first < 1000) {
+//							plus.runtime.quit();
+//						}
+//					}
+//				}
+
 			}
 		</script>
 	</body>

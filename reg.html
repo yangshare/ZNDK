@@ -58,7 +58,7 @@
 			<form class="mui-input-group mui-card">
 				<div class="mui-input-row">
 					<label>账号</label>
-					<input id='account' type="text" class="mui-input-clear mui-input" placeholder="请输入手机号">
+					<input id='account' type="tel" class="mui-input-clear mui-input" placeholder="请输入手机号" maxlength="11">
 				</div>
 				<div class="mui-input-row">
 					<label>密码</label>
@@ -131,7 +131,7 @@
 				$.init();
 				$.plusReady(function() {
 					var isFirst = true;
-//					console.log(plus.storage.getItem("isFirst"));
+					//					console.log(plus.storage.getItem("isFirst"));
 					if (plus.storage.getItem("isFirst") == false) {
 						$.openWindow({
 							url: 'login.html',
@@ -167,16 +167,21 @@
 									plus.nativeUI.toast(err);
 									return;
 								} else {
-									mui.ajax('http://server-name/login.php', {
+									mui.ajax('http://115.28.82.149:8080/ZNDK/User_regist', {
 										data: {
-											regInfo: regInfo
+											PhoneNum: accountBox.value,
+											PassWord: passwordBox.value,
+											PwdQuestion: getRadios(radiosq),
+											PwdAnswer: answerBox.value,
+											MacName: myMACBox.value
+
 										},
 										dataType: 'json', //服务器返回json格式数据
 										type: 'post', //HTTP请求类型
 										timeout: 10000, //超时时间设置为10秒；
 										success: function(data) {
 											//服务器返回响应，根据响应结果，分析是否登录成功；
-											if (data.json == 1) {
+											if (data.json != 3) {
 												plus.storage.setItem("isFirst", false);
 												plus.nativeUI.toast('注册成功');
 												//注册成功跳转到登录页
@@ -187,6 +192,8 @@
 														aniShow: 'pop-in'
 													}
 												});
+											}else{
+												plus.nativeUI.toast("用户已经存在！");
 											}
 										},
 										error: function(xhr, type, errorThrown) {
