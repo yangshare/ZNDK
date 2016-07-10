@@ -57,7 +57,7 @@
 						<div class="mui-col-xs-6 "><img src="images/img/temperature.png" /></div>
 					</div>
 					<div class="mui-row">
-						<div id="h" class="mui-col-xs-6 ">22%</div>
+						<div id="h" class="mui-col-xs-6 ">45%</div>
 						<div id="t" class="mui-col-xs-6 ">25°C</div>
 
 					</div>
@@ -75,7 +75,7 @@
 
 					<div class="row">
 						<div class="col-xs-4 col-md-4">
-							<a href="#" id="my-btn-auto"><img src="images/img/c2.png" class="img-responsive" style="display: inline;" /></a>
+							<a href="#" id="my-btn-auto"><img id="my_btn_auto_img" src="images/img/c22.png" class="img-responsive" style="display: inline;" /></a>
 						</div>
 						<div class="col-xs-4 col-md-4">
 							<a href="menu.html"><img src="images/img/c3.png" class="img-responsive" style="display: inline;" /></a>
@@ -98,17 +98,29 @@
 
 		<script>
 			(function($, doc) {
-				var h = doc.getElementById("h");//湿度
-				var t = doc.getElementById("t");//温度
-				var hmsg = doc.getElementById("h-msg");//湿度
-				var tmsg = doc.getElementById("t-msg");//温度
+				var settings = app.getSettings(); //获取本地设置集
+				var h = doc.getElementById("h"); //湿度
+				var t = doc.getElementById("t"); //温度
+				var hmsg = doc.getElementById("h-msg"); //湿度
+				var tmsg = doc.getElementById("t-msg"); //温度
 				var w = null;
 				$.init();
 				$.plusReady(function() {
-					console.log(plus.storage.getItem("myMac"));
+					//预加载菜单页面
+					setTimeout(function() {
+						console.log("预加载页面");
+						menu = mui.preload({
+							id: 'menu.html',
+							url: 'menu.html',
+							
+							show: {
+								aniShow: 'none'
+							}
+						});
+					}, 200);
 					var w = null; //等待
 					//加载页面加载温湿度
-					mui.ajax('http://115.28.82.149:8080/ZNDK/HTC_getHTC', {
+					mui.ajax('http://112.74.131.35:8080/ZNDK/HTC_getHTC', {
 						data: {
 							MacName: plus.storage.getItem("myMac")
 						},
@@ -120,37 +132,36 @@
 						},
 						success: function(data) {
 							w.close();
-							console.log(data.json.H + "," + data.json.T + "," + data.json.C);
+							//							console.log(data.json.H + "," + data.json.T + "," + data.json.C);
 
-							if (data.json.C == 0) {
-								alert("硬件离线");
-							} else if (data.json.C == 4) {
-								alert("设备已连接，未发送温湿度到服务器");
-							} else if (data.json.C == 5) {
-								alert("设备发送温湿度格式错误");
+							if(data.json.C == 0) {
+								plus.nativeUI.toast("硬件离线");
+							} else if(data.json.C == 4) {
+								plus.nativeUI.toast("设备已连接，未发送温湿度到服务器");
+							} else if(data.json.C == 5) {
+								plus.nativeUI.toast("设备发送温湿度格式错误");
 							} else {
-//								plus.nativeUI.toast('获取温湿度成功！');
-								h.innerHTML = data.json.H + "%";//湿度
-								t.innerHTML = data.json.T + "°C";//温度
-								if(data.json.T<15){
-									tmsg.innerHTML="温度过低";
+								//								plus.nativeUI.toast('获取温湿度成功！');
+								h.innerHTML = data.json.H + "%"; //湿度
+								t.innerHTML = data.json.T + "°C"; //温度
+								if(data.json.T < 15) {
+									tmsg.innerHTML = "温度过低";
 								}
-								if(data.json.T>=15&&data.json.T<=25){
-									tmsg.innerHTML="温度适宜";
-								}else{
-									tmsg.innerHTML="桑拿天气";
+								if(data.json.T >= 15 && data.json.T <= 25) {
+									tmsg.innerHTML = "温度适宜";
+								} else {
+									tmsg.innerHTML = "桑拿天气";
 								}
-								if(data.json.H<40){
-									hmsg.innerHTML="环境干燥";
+								if(data.json.H < 40) {
+									hmsg.innerHTML = "环境干燥";
 								}
-								if(data.json.H>=40&&data.json.H<=50){
-									hmsg.innerHTML="湿度适宜";
-								}else{
-									hmsg.innerHTML="环境潮湿";
+								if(data.json.H >= 40 && data.json.H <= 50) {
+									hmsg.innerHTML = "湿度适宜";
+								} else {
+									hmsg.innerHTML = "环境潮湿";
 								}
 
 							}
-
 
 						},
 						error: function(xhr, type, errorThrown) {
@@ -160,50 +171,95 @@
 							console.log(type);
 						}
 					});
+
 					//自动模式，弹出提示
 					var btn_auto = document.getElementById("my-btn-auto");
+					var my_btn_auto_img = document.getElementById("my_btn_auto_img");
+					//判断自动模式是否开启
+					if(settings.autoIsOpen) {
+						my_btn_auto_img.src = "images/img/c2.png";
+					}
+
 					//监听点击事件
 					btn_auto.addEventListener("tap", function() {
-						//自动模式
-						mui.ajax('http://115.28.82.149:8080/ZNDK/Command_auto', {
-							data: {
-								MacName: plus.storage.getItem("myMac")
-							},
-							dataType: 'json', //服务器返回json格式数据
-							type: 'post', //HTTP请求类型
-							timeout: 10000, //超时时间设置为10秒；
-							beforeSend: function() {
-								//								alert("发送前");
-								w = plus.nativeUI.showWaiting("加载");
-							},
-							success: function(data) {
-								console.log(data.json);
-								//关闭加载
-								w.close();
-								//服务器返回响应，根据响应结果，分析是否登录成功；
-								if (data.json == 1) {
-									plus.nativeUI.toast('自动模式开启成功！');
-								}
-								if (data.json == 2) {
-									plus.nativeUI.toast('硬件离线！');
+						//判断自动模式是否开启
+						if(settings.autoIsOpen) { //如果自动模式开启
+							//关闭自动模式
 
+							mui.ajax('http://112.74.131.35:8080/ZNDK/Command_hand', {
+								data: {
+									MacName: plus.storage.getItem("myMac"),
+									Colors: 4,
+									Light: 1
+								},
+								dataType: 'json', //服务器返回json格式数据
+								type: 'post', //HTTP请求类型
+								timeout: 10000, //超时时间设置为10秒；
+								success: function(data) {
+									console.log(data.json);
+									//服务器返回响应，根据响应结果，分析是否登录成功；
+									if(data.json == 1) {
+										plus.nativeUI.toast('自动模式关闭成功');
+										settings.autoIsOpen = false;
+										app.setSettings(settings);
+										my_btn_auto_img.src = "images/img/c22.png";
+									} else {
+										plus.nativeUI.toast('硬件离线');
+
+									}
+								},
+								error: function(xhr, type, errorThrown) {
+									//异常处理；
+									plus.nativeUI.toast('自动模式关闭失败');
+									console.log(type);
 								}
-							},
-							error: function(xhr, type, errorThrown) {
-								//关闭加载
-								w.close();
-								//异常处理；type：错误描述，可取值："timeout", "error", "abort", "parsererror"、"null"
-								plus.nativeUI.toast('自动模式开启失败！');
-								console.log(type);
-							}
-						});
+							});
+						} else { //如果自动模式关闭
+							//开启自动模式
+
+							mui.ajax('http://112.74.131.35:8080/ZNDK/Command_auto', {
+								data: {
+									MacName: plus.storage.getItem("myMac")
+								},
+								dataType: 'json', //服务器返回json格式数据
+								type: 'post', //HTTP请求类型
+								timeout: 10000, //超时时间设置为10秒；
+								beforeSend: function() {
+									w = plus.nativeUI.showWaiting("加载");
+								},
+								success: function(data) {
+									//								console.log(data.json);
+									//关闭加载
+									w.close();
+									//服务器返回响应，根据响应结果，分析是否登录成功；
+									if(data.json == 1) {
+										plus.nativeUI.toast('自动模式开启成功！');
+										settings.autoIsOpen = true;
+										app.setSettings(settings);
+										my_btn_auto_img.src = "images/img/c2.png";
+									}
+									if(data.json == 2) {
+										plus.nativeUI.toast('硬件离线！');
+
+									}
+								},
+								error: function(xhr, type, errorThrown) {
+									//关闭加载
+									w.close();
+									//异常处理；type：错误描述，可取值："timeout", "error", "abort", "parsererror"、"null"
+									plus.nativeUI.toast('自动模式开启失败！');
+									console.log(type);
+								}
+							});
+
+						}
 
 					});
 					//返回键，退出应用
 					var backButtonPress = 0;
 					$.back = function(event) {
 						backButtonPress++;
-						if (backButtonPress > 1) {
+						if(backButtonPress > 1) {
 							plus.runtime.quit();
 						} else {
 							plus.nativeUI.toast('再按一次退出应用');

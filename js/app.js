@@ -4,29 +4,34 @@
  * 请注意将相关方法调整成 “基于服务端Service” 的实现。
  **/
 (function($, owner) {
+
+	//参数区
+	var phoneNumReg = /^1[3|4|5|8]\d{9}$/; //手机号正则表达式
+	var callback = callback || $.noop; //回调函数
 	/**
 	 * 用户登录
 	 **/
 	owner.login = function(loginInfo, callback) {
-		callback = callback || $.noop;
+
 		loginInfo = loginInfo || {};
 		loginInfo.account = loginInfo.account || '';
 		loginInfo.password = loginInfo.password || '';
-		if (loginInfo.account.length < 5) {
-			return callback('账号最短为 5 个字符');
+		if (!(phoneNumReg.test(loginInfo.account))) {
+			return callback('手机号输入不正确');
 		}
 		if (loginInfo.password.length < 6) {
 			return callback('密码最短为 6 个字符');
 		}
-		var users = JSON.parse(localStorage.getItem('$users') || '[]');
-		var authed = users.some(function(user) {
-			return loginInfo.account == user.account && loginInfo.password == user.password;
-		});
-		if (authed) {
-			return owner.createState(loginInfo.account, callback);
-		} else {
-			return callback('用户名或密码错误');
-		}
+		//		var users = JSON.parse(localStorage.getItem('$users') || '[]');
+		//		var authed = users.some(function(user) {
+		//			return loginInfo.account == user.account && loginInfo.password == user.password;
+		//		});
+		//		if (authed) {
+		//			return owner.createState(loginInfo.account, callback);
+		//		} else {
+		//			return callback('用户名或密码错误');
+		//		}
+		return callback();
 	};
 
 	owner.createState = function(name, callback) {
@@ -42,29 +47,27 @@
 	 **/
 	owner.reg = function(regInfo, callback) {
 
-		var reg=/^1[3|4|5|8]\d{9}$/;//手机号正则表达式
 		callback = callback || $.noop;
 		regInfo = regInfo || {};
 		regInfo.account = regInfo.account || '';
 		regInfo.password = regInfo.password || '';
-		if (!(reg.test(regInfo.account))) {
+		if (!(phoneNumReg.test(regInfo.account))) {
 			return callback('手机号输入不正确');
 		}
 		if (regInfo.password.length < 6) {
 			return callback('密码最短需要 6 个字符');
 		}
-		if (regInfo.answer.length<2) {
+		if (regInfo.answer.length < 2) {
 			return callback('密保答案有误');
 		}
-		if (regInfo.myMAC.length<1) {
+		if (regInfo.myMAC.length < 1) {
 			return callback('硬件绑定有误');
 		}
-		var users = JSON.parse(localStorage.getItem('$users') || '[]');
-		users.push(regInfo);
-		localStorage.setItem('$users', JSON.stringify(users));
+
+		localStorage.setItem('user', JSON.stringify(regInfo));
 		return callback();
 	};
-	
+
 	/**
 	 * 获取当前状态
 	 **/
@@ -101,7 +104,7 @@
 	};
 
 	/**
-	 * 获取应用本地配置
+	 * 设置应用本地配置
 	 **/
 	owner.setSettings = function(settings) {
 		settings = settings || {};
@@ -109,7 +112,7 @@
 	}
 
 	/**
-	 * 设置应用本地配置
+	 * 获取应用本地配置
 	 **/
 	owner.getSettings = function() {
 			var settingsText = localStorage.getItem('$settings') || "{}";
@@ -118,36 +121,36 @@
 		/**
 		 * 获取本地是否安装客户端
 		 **/
-	owner.isInstalled = function(id) {
-		if (id === 'qihoo' && mui.os.plus) {
-			return true;
-		}
-		if (mui.os.android) {
-			var main = plus.android.runtimeMainActivity();
-			var packageManager = main.getPackageManager();
-			var PackageManager = plus.android.importClass(packageManager)
-			var packageName = {
-				"qq": "com.tencent.mobileqq",
-				"weixin": "com.tencent.mm",
-				"sinaweibo": "com.sina.weibo"
-			}
-			try {
-				return packageManager.getPackageInfo(packageName[id], PackageManager.GET_ACTIVITIES);
-			} catch (e) {}
-		} else {
-			switch (id) {
-				case "qq":
-					var TencentOAuth = plus.ios.import("TencentOAuth");
-					return TencentOAuth.iphoneQQInstalled();
-				case "weixin":
-					var WXApi = plus.ios.import("WXApi");
-					return WXApi.isWXAppInstalled()
-				case "sinaweibo":
-					var SinaAPI = plus.ios.import("WeiboSDK");
-					return SinaAPI.isWeiboAppInstalled()
-				default:
-					break;
-			}
-		}
-	}
+//	owner.isInstalled = function(id) {
+//		if (id === 'qihoo' && mui.os.plus) {
+//			return true;
+//		}
+//		if (mui.os.android) {
+//			var main = plus.android.runtimeMainActivity();
+//			var packageManager = main.getPackageManager();
+//			var PackageManager = plus.android.importClass(packageManager)
+//			var packageName = {
+//				"qq": "com.tencent.mobileqq",
+//				"weixin": "com.tencent.mm",
+//				"sinaweibo": "com.sina.weibo"
+//			}
+//			try {
+//				return packageManager.getPackageInfo(packageName[id], PackageManager.GET_ACTIVITIES);
+//			} catch (e) {}
+//		} else {
+//			switch (id) {
+//				case "qq":
+//					var TencentOAuth = plus.ios.import("TencentOAuth");
+//					return TencentOAuth.iphoneQQInstalled();
+//				case "weixin":
+//					var WXApi = plus.ios.import("WXApi");
+//					return WXApi.isWXAppInstalled()
+//				case "sinaweibo":
+//					var SinaAPI = plus.ios.import("WeiboSDK");
+//					return SinaAPI.isWeiboAppInstalled()
+//				default:
+//					break;
+//			}
+//		}
+//	}
 }(mui, window.app = {}));

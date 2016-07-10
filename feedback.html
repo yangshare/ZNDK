@@ -38,7 +38,7 @@
 					//				alert("questionBox=" + questionBox.value.length+ ",contactBox=" + contactBox.value);
 					//非空判断
 					if (questionBox.value.length > 0) {
-						mui.ajax('http://115.28.82.149:8080/ZNDK/User_feedback', {
+						mui.ajax('http://112.74.131.35:8080/ZNDK/User_feedback', {
 							data: {
 								FeedBack: questionBox.value + "，联系方式：" + contactBox.value,
 								MacName: plus.storage.getItem("myMac")

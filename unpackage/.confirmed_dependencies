@@ -1,231 +1,257 @@
 {
-  "index.html": {
-    "resources": [
-      "js/websocket.js",
-      "js/jquery.js",
-      "css/mui.min.css",
-      "css/style.css",
-      "login.html",
-      "js/app.js",
-      "js/mui.min.js",
-      "images/img/humidity.png",
-      "images/img/temperature.png",
-      "images/img/w0.png",
-      "images/img/c3.png",
-      "images/img/c2.png",
-      "images/img/c1.png",
-      "css/bootstrap.min.css",
-      "css/common.css",
-      "js/immersed.js",
-      "feedback.html",
-      "menu.html",
-      "fonts/mui.ttf"
-    ],
-    "refer": [
-      "login.html",
-      "feedback.html",
-      "menu.html"
-    ]
-  },
-  "login.html": {
-    "resources": [
-      "js/mui.min.js",
-      "fonts/mui.ttf",
-      "js/app.js",
-      "css/mui.min.css",
-      "css/style.css",
-      "index.html"
-    ],
-    "refer": [
-      "index.html",
-      "main.html",
-      "unlock.html",
-      "reg.html",
-      "forget_password.html"
-    ]
-  },
-  "unlock.html": {
-    "resources": [
-      "js/mui.locker.js"
-    ],
-    "refer": []
-  },
-  "main.html": {
-    "refer": [
-      "setting.html"
-    ],
-    "resources": []
-  },
-  "setting.html": {
-    "resources": [
-      "fonts/mui.ttf",
-      "js/mui.locker.js",
-      "js/feedback.js",
-      "js/feedback-page.js",
-      "js/mui.view.js"
-    ],
-    "refer": []
-  },
-  "reg.html": {
-    "resources": [
-      "js/app.js",
-      "js/mui.min.js",
-      "fonts/mui.ttf",
-      "css/mui.min.css",
-      "css/style.css",
-      "plus/barcode.html",
-      "js/common.js",
-      "/js/common.js"
-    ],
-    "refer": [
-      "login.html",
-      "plus/barcode.html",
-      "plus/barcode_scan.html"
-    ]
-  },
-  "feedback.html": {
-    "resources": [
-      "js/app.js",
-      "js/mui.min.js",
-      "fonts/mui.ttf",
-      "css/mui.min.css",
-      "index.html"
-    ],
-    "refer": [
-      "index.html"
-    ]
-  },
-  "scenario.html": {
-    "resources": [
-      "js/mui.min.js",
-      "fonts/mui.ttf",
-      "css/iconfont.css",
-      "css/mui.min.css",
-      "fonts/iconfont.ttf"
-    ],
-    "refer": []
-  },
-  "plus/barcode.html": {
-    "resources": [
-      "js/common.js",
-      "css/common.css",
-      "js/immersed.js",
-      "img/barcode.png"
-    ],
-    "refer": [
-      "plus/barcode_scan.html"
-    ]
-  },
-  "plus/barcode_scan.html": {
-    "resources": [
-      "js/common.js",
-      "css/common.css"
-    ],
-    "refer": []
-  },
-  "plus/test_barcode.html": {
-    "resources": [
-      "js/common.js",
-      "css/common.css",
-      "js/immersed.js",
-      "js/mui.min.js",
-      "css/mui.min.css",
-      "fonts/mui.ttf"
-    ],
-    "refer": [
-      "plus/barcode_scan.html"
-    ]
-  },
-  "plus/camera_image.html": {
-    "resources": [
-      "js/common.js",
-      "css/common.css"
-    ],
-    "refer": []
-  },
-  "plus/test.html": {
-    "resources": [
-      "js/mui.min.js",
-      "fonts/mui.ttf",
-      "css/mui.min.css",
-      "js/jquery.js"
-    ],
-    "refer": []
-  },
-  "turnLight.html": {
-    "resources": [
-      "images/img/light_gray.png",
-      "images/img/button_green.png",
-      "js/mui.min.js",
-      "images/img/button_red.png",
-      "images/img/button_blue.png",
-      "fonts/mui.ttf",
-      "css/iconfont.css",
-      "css/mui.min.css",
-      "images/img/light_blue.png",
-      "images/img/light_red.png",
-      "images/img/light_green.png"
-    ],
-    "refer": []
-  },
-  "forget_password.html": {
-    "resources": [
-      "js/app.js",
-      "js/mui.min.js",
-      "fonts/mui.ttf",
-      "css/mui.min.css",
-      "css/style.css"
-    ],
-    "refer": []
-  },
-  "menu.html": {
-    "resources": [
-      "js/mui.min.js",
-      "css/iconfont2.css",
-      "css/mui.min.css",
-      "fonts/iconfont2.ttf",
-      "fonts/iconfont2.ttf",
-      "scenario.html",
-      "second/time.html",
-      "second/turnLight.html",
-      "index.html"
-    ],
-    "refer": [
-      "scenario.html",
-      "login.html",
-      "second/time.html",
-      "second/turnLight.html",
-      "second/scenario.html",
-      "index.html"
-    ]
-  },
-  "second/turnLight.html": {
-    "resources": [
-      "images/img/light_gray.png",
-      "images/img/button_green.png",
-      "js/mui.min.js",
-      "images/img/button_red.png",
-      "images/img/button_blue.png",
-      "fonts/mui.ttf",
-      "css/iconfont.css",
-      "css/mui.min.css",
-      "images/img/light_red.png",
-      "images/img/light_blue.png",
-      "images/img/light_green.png"
-    ]
-  },
-  "second/time.html": {
-    "resources": [
-      "fonts/mui.ttf"
-    ]
-  },
-  "second/scenario.html": {
-    "resources": [
-      "css/iconfont.css",
-      "fonts/iconfont.ttf",
-      "js/mui.min.js",
-      "fonts/mui.ttf",
-      "css/mui.min.css"
-    ]
-  }
+	"index.html": {
+		"resources": [
+			"js/websocket.js",
+			"js/jquery.js",
+			"css/mui.min.css",
+			"css/style.css",
+			"login.html",
+			"js/app.js",
+			"js/mui.min.js",
+			"images/img/humidity.png",
+			"images/img/temperature.png",
+			"images/img/w0.png",
+			"images/img/c3.png",
+			"images/img/c2.png",
+			"images/img/c1.png",
+			"css/bootstrap.min.css",
+			"css/common.css",
+			"js/immersed.js",
+			"feedback.html",
+			"menu.html",
+			"fonts/mui.ttf",
+			"images/img/c22.png"
+		],
+		"refer": [
+			"login.html",
+			"feedback.html",
+			"menu.html",
+			"second/turnLight.html"
+		]
+	},
+	"login.html": {
+		"resources": [
+			"js/mui.min.js",
+			"fonts/mui.ttf",
+			"js/app.js",
+			"css/mui.min.css",
+			"css/style.css",
+			"index.html",
+			"reg.html",
+			"forget_password.html"
+		],
+		"refer": [
+			"index.html",
+			"main.html",
+			"unlock.html",
+			"reg.html",
+			"forget_password.html"
+		]
+	},
+	"unlock.html": {
+		"resources": [
+			"js/mui.locker.js"
+		],
+		"refer": []
+	},
+	"main.html": {
+		"refer": [
+			"setting.html"
+		],
+		"resources": []
+	},
+	"setting.html": {
+		"resources": [
+			"fonts/mui.ttf",
+			"js/mui.locker.js",
+			"js/feedback.js",
+			"js/feedback-page.js",
+			"js/mui.view.js"
+		],
+		"refer": []
+	},
+	"reg.html": {
+		"resources": [
+			"js/app.js",
+			"js/mui.min.js",
+			"fonts/mui.ttf",
+			"css/mui.min.css",
+			"css/style.css",
+			"plus/barcode.html",
+			"js/common.js",
+			"/js/common.js",
+			"login.html"
+		],
+		"refer": [
+			"login.html",
+			"plus/barcode.html",
+			"plus/barcode_scan.html"
+		]
+	},
+	"feedback.html": {
+		"resources": [
+			"js/app.js",
+			"js/mui.min.js",
+			"fonts/mui.ttf",
+			"css/mui.min.css",
+			"index.html"
+		],
+		"refer": [
+			"index.html"
+		]
+	},
+	"scenario.html": {
+		"resources": [
+			"js/mui.min.js",
+			"fonts/mui.ttf",
+			"css/iconfont.css",
+			"css/mui.min.css",
+			"fonts/iconfont.ttf"
+		],
+		"refer": []
+	},
+	"plus/barcode.html": {
+		"resources": [
+			"js/common.js",
+			"css/common.css",
+			"js/immersed.js",
+			"img/barcode.png"
+		],
+		"refer": [
+			"plus/barcode_scan.html"
+		]
+	},
+	"plus/barcode_scan.html": {
+		"resources": [
+			"js/common.js",
+			"css/common.css"
+		],
+		"refer": []
+	},
+	"plus/test_barcode.html": {
+		"resources": [
+			"js/common.js",
+			"css/common.css",
+			"js/immersed.js",
+			"js/mui.min.js",
+			"css/mui.min.css",
+			"fonts/mui.ttf"
+		],
+		"refer": [
+			"plus/barcode_scan.html"
+		]
+	},
+	"plus/camera_image.html": {
+		"resources": [
+			"js/common.js",
+			"css/common.css"
+		],
+		"refer": []
+	},
+	"plus/test.html": {
+		"resources": [
+			"js/mui.min.js",
+			"fonts/mui.ttf",
+			"css/mui.min.css",
+			"js/jquery.js"
+		],
+		"refer": []
+	},
+	"turnLight.html": {
+		"resources": [
+			"images/img/light_gray.png",
+			"images/img/button_green.png",
+			"js/mui.min.js",
+			"images/img/button_red.png",
+			"images/img/button_blue.png",
+			"fonts/mui.ttf",
+			"css/iconfont.css",
+			"css/mui.min.css",
+			"images/img/light_blue.png",
+			"images/img/light_red.png",
+			"images/img/light_green.png"
+		],
+		"refer": []
+	},
+	"forget_password.html": {
+		"resources": [
+			"js/app.js",
+			"js/mui.min.js",
+			"fonts/mui.ttf",
+			"css/mui.min.css",
+			"css/style.css",
+			"chang_password.html",
+			"login.html"
+		],
+		"refer": [
+			"chang_password.html",
+			"login.html"
+		]
+	},
+	"menu.html": {
+		"resources": [
+			"js/mui.min.js",
+			"css/iconfont2.css",
+			"css/mui.min.css",
+			"fonts/iconfont2.ttf",
+			"fonts/iconfont2.ttf",
+			"scenario.html",
+			"second/time.html",
+			"second/turnLight.html",
+			"index.html"
+		],
+		"refer": [
+			"scenario.html",
+			"login.html",
+			"second/time.html",
+			"second/turnLight.html",
+			"second/scenario.html",
+			"index.html"
+		]
+	},
+	"second/turnLight.html": {
+		"resources": [
+			"images/img/light_gray.png",
+			"images/img/button_green.png",
+			"js/mui.min.js",
+			"images/img/button_red.png",
+			"images/img/button_blue.png",
+			"fonts/mui.ttf",
+			"css/iconfont.css",
+			"css/mui.min.css",
+			"images/img/light_red.png",
+			"images/img/light_blue.png",
+			"images/img/light_green.png",
+			"js/app.js"
+		]
+	},
+	"second/time.html": {
+		"resources": [
+			"fonts/mui.ttf"
+		]
+	},
+	"second/scenario.html": {
+		"resources": [
+			"css/iconfont.css",
+			"fonts/iconfont.ttf",
+			"js/mui.min.js",
+			"fonts/mui.ttf",
+			"css/mui.min.css"
+		]
+	},
+	"chang_password.html": {
+		"resources": [
+			"forget_password.html",
+			"login.html",
+			"js/app.js",
+			"js/mui.min.js",
+			"fonts/mui.ttf",
+			"css/mui.min.css",
+			"css/style.css"
+		],
+		"refer": [
+			"forget_password.html",
+			"login.html"
+		]
+	}
 }

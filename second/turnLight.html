@@ -27,38 +27,36 @@
 		<div class="mui-content">
 			<div class="mui-content-padded">
 				<p>
-					*点击3种颜色按钮调色、拖块滑动条调节亮度，再点击确认生效
+					*点击3种颜色按钮调色,拖块滑动条调节亮度再提交
 				</p>
 			</div>
 			<div style="padding: 20px;text-align: center;">
-				<img id="my-image-light" src="../images/img/light_gray.png" width="50%"  />
-				<button id="closeLight" type="button" class="mui-btn mui-btn-mini">关灯</button>
+				<img id="my-image-light" src="../images/img/light_gray.png" width="50%" />
 			</div>
 			<div id="Gallery" class="mui-slider" style="margin-top:15px;" data-slider="1">
 				<div class="mui-slider-group" style="transform: translate3d(0px, 0px, 0px) translateZ(0px); transition-duration: 0ms;">
 					<div class="mui-slider-item">
 						<ul class="mui-table-view mui-grid-view mui-grid-9">
 							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
-								<a href="#">
+								<a id="redLight" href="#">
 									<img src="../images/img/button_red.png" />
 									<div class="mui-media-body">red</div>
 								</a>
 							</li>
 							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4" style="margin-top: 30px;">
-								<a href="#">
+								<a id="blueLight" href="#">
 
 									<img src="../images/img/button_blue.png" />
 
 									<div class="mui-media-body">blue</div>
 								</a>
 							</li>
-							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4" >
-								<a href="#">
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+								<a id="greenLight" href="#">
 									<img src="../images/img/button_green.png" />
 									<div class="mui-media-body">green</div>
 								</a>
 							</li>
-							
 
 						</ul>
 					</div>
@@ -69,20 +67,27 @@
 			<br />
 			<div class="" style="margin-left: 10px;">
 				<h5 style="clear: left;">设置亮度：<span id="block-range-val">16</span></h5>
-				<div class="mui-input-row mui-input-range" style="margin-bottom: 30px;">
+				<div class="mui-input-row mui-input-range" style="margin-bottom: 30px;width: 80%;clear: none;position: absolute;">
 					<input type="range" id="block-range" value="16" min="1" max="32" data-input-slider="4">
-				</div>
-			</div>
-			<div style="padding:5px;">
-				<button id="my-btn-OK" type="button" class="mui-btn mui-btn-blue mui-btn-block">确认生效</button>
-			</div>
 
+				</div>
+				<button style="width: 20%;float: right;margin-right: 5px;" id="my-btn-OK" type="button" class="mui-btn mui-btn-blue">提交</button>
+			</div>
+			<br />
+			<br />
+			<br />
+			<br />
 		</div>
 		<script src="../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/app.js" type="text/javascript" charset="utf-8"></script>
 		<script>
 			(function($, doc) {
 				$.init();
 				$.plusReady(function() {
+					//本地设置
+					var settings = app.getSettings();
+					//等待加载
+					var wt = null;
 					//大灯
 					var myLight = document.getElementById("my-image-light");
 					//灯的颜色
@@ -91,70 +96,96 @@
 					var lightNum = 16;
 					//确认生效
 					var btn_OK = doc.getElementById("my-btn-OK");
-					var closeLight=doc.getElementById("closeLight");
-					//监听点击事件
-					closeLight.addEventListener("tap", function() {
-						myLight.src = "../images/img/light_gray.png";
-						mui.ajax('http://115.28.82.149:8080/ZNDK/Command_hand', {
-							data: {
-								MacName:plus.storage.getItem("myMac"),
-								Colors: 4,
-								Light: 1
-							},
-							dataType: 'json', //服务器返回json格式数据
-							type: 'post', //HTTP请求类型
-							timeout: 10000, //超时时间设置为10秒；
-							success: function(data) {
-								console.log(data.json);
-								//服务器返回响应，根据响应结果，分析是否登录成功；
-								if (data.json == 1) {
-									plus.nativeUI.toast('设置成功');
-								}else{
-									plus.nativeUI.toast('硬件离线');
-									
-								}
-							},
-							error: function(xhr, type, errorThrown) {
-								//异常处理；
-								plus.nativeUI.toast('设置失败');
-								console.log(type);
-							}
-						});
-					});
+					var imgsrc = "../images/img/light_gray.png"; //灯的图片
+					//初始化设置
+					initLights();
+
+					//监听提交按钮点击事件
 					btn_OK.addEventListener("tap", function() {
+						submitCommand();
+					});
+
+					function initLights() { //加载本地设置
+
+						console.log(settings.lightColor);
+						if(settings.lightColor != null) {
+							lightColor = settings.lightColor //红1，蓝2，绿3,关4
+							switch(settings.lightColor) {
+								case 1:
+									$("#redLight")[0].className = "active";
+									imgsrc = "../images/img/light_red.png"; //灯的图片
+									console.log("红");
+									break;
+								case 2:
+									$("#blueLight")[0].className = "active";
+									imgsrc = "../images/img/light_blue.png"; //灯的图片
+									break;
+								case 3:
+									$("#greenLight")[0].className = "active";
+									imgsrc = "../images/img/light_green.png"; //灯的图片
+									break;
+								default:
+									break;
+							}
+							myLight.src = imgsrc;//设置灯的图片
+						}
+						if(settings.lightNum != null) {
+							//灯的亮度
+							lightNum = settings.lightNum;
+							$("#block-range")[0].value = settings.lightNum;
+							$("#block-range-val")[0].innerHTML = settings.lightNum;
+						}
+					}
+					//提交命令到服务器
+					function submitCommand() {
+						//将设置参数放本地
+//						settings.lightColor = lightColor;
+//						settings.lightNum = lightNum;
+//						app.setSettings(settings);
 						console.log("颜色=" + lightColor + ",亮度=" + lightNum);
-						mui.ajax('http://115.28.82.149:8080/ZNDK/Command_hand', {
+						mui.ajax('http://112.74.131.35:8080/ZNDK/Command_hand', {
 							data: {
-								MacName:plus.storage.getItem("myMac"),
+								MacName: plus.storage.getItem("myMac"),
 								Colors: lightColor,
 								Light: lightNum
 							},
+							beforeSend: function() {
+								wt = plus.nativeUI.showWaiting("提交");
+							},
 							dataType: 'json', //服务器返回json格式数据
 							type: 'post', //HTTP请求类型
 							timeout: 10000, //超时时间设置为10秒；
 							success: function(data) {
-								if (data.json == 1) {
+								//将设置参数放本地
+								settings.lightColor = lightColor;
+								settings.lightNum = lightNum;
+								app.setSettings(settings);
+								wt.close();
+								if(data.json == 1) {
 									plus.nativeUI.toast('设置成功');
-									
-								}else{
+
+								} else {
 									plus.nativeUI.toast('硬件离线');
-									
+
 								}
 							},
 							error: function(xhr, type, errorThrown) {
+								wt.close();
+
 								//异常处理；
 								plus.nativeUI.toast('设置失败');
 								console.log(type);
 							}
 						});
-					});
+					}
+
 					//监听input事件，获取range的value值，也可以直接element.value获取该range的值
 					var rangeList = document.querySelectorAll('input[type="range"]');
-					for (var i = 0, len = rangeList.length; i < len; i++) {
+					for(var i = 0, len = rangeList.length; i < len; i++) {
 						rangeList[i].addEventListener('input', function() {
 							//赋值给亮度变量lightNum
 							lightNum = this.value;
-							if (this.id.indexOf('field') >= 0) {
+							if(this.id.indexOf('field') >= 0) {
 								document.getElementById(this.id + '-input').value = this.value;
 							} else {
 								document.getElementById(this.id + '-val').innerHTML = this.value;
@@ -167,18 +198,28 @@
 						var ul = li.parentNode;
 						var lis = ul.children;
 						var scene = 1;
-						for (var i = 0; i < lis.length; i++) {
-							lis[i].children[0].className = "";
-						}
-						this.className = "active";
-						for (var i = 0; i < lis.length; i++) {
-							if (lis[i].children[0].className == "active") {
-								scene = i + 1;
-								lightColor=scene;
+						
+
+						if(this.className == "active") {
+							this.className = "";
+							lightColor = 4;
+							imgsrc = "../images/img/light_gray.png"; //灯的图片
+						} else {
+							for(var i = 0; i < lis.length; i++) {
+								lis[i].children[0].className = "";
+							}
+							this.className = "active";
+							for(var i = 0; i < lis.length; i++) {
+								if(lis[i].children[0].className == "active") {
+									scene = i + 1;
+									lightColor = scene;
+									imgsrc = "../images/img/light_" + this.children[1].innerHTML + ".png";
+								}
 							}
 						}
-						myLight.src = "../images/img/light_" + this.children[1].innerHTML + ".png";
-						//						plus.nativeUI.toast(this.children[1].innerHTML + '开启成功！');
+
+						myLight.src = imgsrc;
+						submitCommand(); //提交命令
 					});
 				});
 			}(mui, document));

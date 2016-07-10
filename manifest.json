@@ -14,7 +14,7 @@
 	"icons": {
 		"72": "icon.png"
 	},
-	"launch_path": "login.html",/*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
+	"launch_path": "index.html",/*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
 	"developer": {
 		"name": "",/*开发者名称*/
 		"email": "",/*开发者邮箱地址*/
@@ -224,9 +224,12 @@
 					"fonts/mui.ttf",
 					"css/style.css",
 					"js/mui.min.js",
-					"js/app.js"
+					"js/app.js",
+					"chang_password.html",
+					"login.html"
 				],
-				"priority": 1
+				"priority": 1,
+				"refer": []
 			},
 			"reg.html": {
 				"href": "reg.html",
@@ -238,10 +241,10 @@
 					"js/app.js",
 					"plus/barcode.html",
 					"js/common.js",
-					"/js/common.js"
+					"/js/common.js",
+					"login.html"
 				],
 				"refer": [
-					"login.html",
 					"plus/barcode_scan.html"
 				],
 				"priority": 3
@@ -259,13 +262,13 @@
 					"images/qq.png",
 					"images/sinaweibo.png",
 					"images/weixin.png",
-					"index.html"
+					"index.html",
+					"reg.html",
+					"forget_password.html"
 				],
 				"refer": [
 					"unlock.html",
-					"forget_password.html",
-					"main.html",
-					"reg.html"
+					"main.html"
 				],
 				"priority": 0
 			},
@@ -289,9 +292,12 @@
 					"js/immersed.js",
 					"feedback.html",
 					"menu.html",
-					"fonts/mui.ttf"
+					"fonts/mui.ttf",
+					"images/img/c22.png"
 				],
-				"refer": [],
+				"refer": [
+					"second/turnLight.html"
+				],
 				"priority": 0
 			},
 			"feedback.html": {
@@ -415,7 +421,8 @@
 					"css/mui.min.css",
 					"images/img/light_red.png",
 					"images/img/light_blue.png",
-					"images/img/light_green.png"
+					"images/img/light_green.png",
+					"js/app.js"
 				],
 				"refer": [],
 				"priority": 0
@@ -434,6 +441,19 @@
 					"js/mui.min.js",
 					"fonts/mui.ttf",
 					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"chang_password.html": {
+				"resources": [
+					"forget_password.html",
+					"login.html",
+					"js/app.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"css/style.css"
 				],
 				"refer": [],
 				"priority": 0
